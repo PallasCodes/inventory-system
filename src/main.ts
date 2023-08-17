@@ -15,8 +15,8 @@ async function bootstrap() {
   )
 
   const config = new DocumentBuilder()
-    .setTitle('Twitter')
-    .setDescription('Twitter description')
+    .setTitle('Inventory')
+    .setDescription('Inventory system')
     .setVersion('1.0')
     .build()
   const document = SwaggerModule.createDocument(app, config)
