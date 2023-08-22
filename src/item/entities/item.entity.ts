@@ -3,11 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { Category } from './category.entity'
+import { SingleItem } from './single-item.entity'
 
 @Entity('items')
 export class Item {
@@ -50,8 +53,13 @@ export class Item {
   public updatedAt: Date
 
   @ApiProperty()
-  @ManyToOne(() => Category, (category) => category.items, { nullable: true })
-  category: Category
+  @ManyToMany(() => Category, (category) => category.items, { nullable: true })
+  @JoinTable()
+  categories: Category[]
 
-  // add calculated columns for borrowed and available amounts
+  @ApiProperty()
+  @OneToMany(() => SingleItem, (singleItem) => singleItem.item)
+  singleItems: SingleItem[]
+
+  // TODO: add calculated columns for borrowed and available amounts
 }

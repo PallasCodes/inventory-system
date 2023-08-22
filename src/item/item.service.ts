@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 
 import { CreateItemDto } from './dto/create-item.dto'
 import { UpdateItemDto } from './dto/update-item.dto'
 import { Category, Item } from './entities'
+import { CreateCategoryDto } from './dto/create-category.dto'
 
 @Injectable()
 export class ItemService {
@@ -14,21 +15,28 @@ export class ItemService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async create(createItemDto: CreateItemDto) {
+  async createItem(createItemDto: CreateItemDto) {
     try {
-      const { categoryId } = createItemDto
+      const { categoriesIds } = createItemDto
+      const item = this.itemRepository.create(createItemDto)
 
-      const category = await this.categoryRepository.findOneBy({
-        id: categoryId,
-      })
-
-      if (!category)
-        throw new BadRequestException(
-          `There's no category with the given ID: ${categoryId}`,
+      if (categoriesIds?.length > 0) {
+        const categories = await this.categoryRepository.findBy({
+          id: In(categoriesIds),
+        })
+        console.log(
+          '🚀 ~ file: item.service.ts:27 ~ ItemService ~ createItem ~ categories:',
+          categories,
         )
 
-      const item = this.itemRepository.create(createItemDto)
-      item.category = category
+        if (!categories)
+          throw new BadRequestException(
+            'There are no categories with the given IDs',
+          )
+
+        item.categories = categories
+      }
+
       await this.itemRepository.save(item)
 
       return item
@@ -38,12 +46,17 @@ export class ItemService {
     }
   }
 
-  findAll() {
-    return `This action returns all item`
+  async findAllItems() {
+    try {
+      const items = await this.itemRepository.find()
+      return items
+    } catch (error) {}
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`
+  async findOneItem(id: string) {
+    const item = await this.itemRepository.findOneBy({ id })
+    if (item) return item
+    throw new BadRequestException(`Item not found with the given ID: ${id}`)
   }
 
   update(id: number, updateItemDto: UpdateItemDto) {
@@ -52,5 +65,21 @@ export class ItemService {
 
   remove(id: number) {
     return `This action removes a #${id} item`
+  }
+
+  async createCategory(createCategory: CreateCategoryDto) {
+    try {
+      const category = await this.categoryRepository.create(createCategory)
+      await this.categoryRepository.save(category)
+
+      return category
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findAllCategories() {
+    const categories = await this.categoryRepository.find()
+    return categories
   }
 }

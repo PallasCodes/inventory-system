@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -38,9 +39,10 @@ export class CreateItemDto {
 
   @ApiProperty({
     nullable: true,
-    example: 'cd533345-f1f3-48c9-a62e-7dc2da50c8f8',
+    example: ['cd533345-f1f3-48c9-a62e-7dc2da50c8f8'],
     uniqueItems: true,
   })
-  @IsUUID('4')
-  categoryId: string
+  @IsOptional()
+  @IsArray()
+  categoriesIds?: string[]
 }

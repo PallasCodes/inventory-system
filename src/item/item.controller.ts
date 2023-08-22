@@ -11,6 +11,7 @@ import { ItemService } from './item.service'
 import { CreateItemDto } from './dto/create-item.dto'
 import { UpdateItemDto } from './dto/update-item.dto'
 import { Auth } from 'src/auth/decorators'
+import { CreateCategoryDto } from './dto/create-category.dto'
 
 // @Auth()
 @Controller('item')
@@ -18,18 +19,13 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Post()
-  create(@Body() createItemDto: CreateItemDto) {
-    return this.itemService.create(createItemDto)
+  createItem(@Body() createItemDto: CreateItemDto) {
+    return this.itemService.createItem(createItemDto)
   }
 
   @Get()
-  findAll() {
-    return this.itemService.findAll()
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itemService.findOne(+id)
+  findAllItems() {
+    return this.itemService.findAllItems()
   }
 
   @Patch(':id')
@@ -40,5 +36,20 @@ export class ItemController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.itemService.remove(+id)
+  }
+
+  @Post('category')
+  createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.itemService.createCategory(createCategoryDto)
+  }
+
+  @Get('category')
+  findAllCategories() {
+    return this.itemService.findAllCategories()
+  }
+
+  @Get(':id')
+  findOneItem(@Param('id') id: string) {
+    return this.itemService.findOneItem(id)
   }
 }
