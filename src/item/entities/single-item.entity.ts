@@ -9,6 +9,13 @@ import {
 } from 'typeorm'
 import { Item } from '.'
 
+enum ItemState {
+  AVAILABLE = 'available',
+  UNAVAILABLE = 'unavailable',
+  FIXING = 'fixing',
+  BROKEN = 'broken',
+}
+
 @Entity('single-items')
 export class SingleItem {
   @ApiProperty({
@@ -24,9 +31,8 @@ export class SingleItem {
   comments: string
 
   @ApiProperty()
-  @Column('text', { default: 'available' })
-  state: string
-  // TODO: implement a real enum
+  @Column({ type: 'enum', enum: ItemState, default: ItemState.AVAILABLE })
+  state: ItemState
 
   @ApiProperty()
   @CreateDateColumn({

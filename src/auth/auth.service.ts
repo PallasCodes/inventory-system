@@ -32,6 +32,7 @@ export class AuthService {
       await this.userRepository.save(user)
 
       delete user.password
+      // TODO: return expiration JWT datetime
       return { ...user, token: this.getJwtToken({ id: user.id }) }
     } catch (error) {
       this.handleDBErrors(error)

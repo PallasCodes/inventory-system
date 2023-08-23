@@ -23,6 +23,7 @@ export class ItemController {
     return this.itemService.createItem(createItemDto)
   }
 
+  @Auth()
   @Get()
   findAllItems() {
     return this.itemService.findAllItems()

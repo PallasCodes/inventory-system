@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const logger = new Logger('Bootstrap')
 
+  app.enableCors()
   app.setGlobalPrefix('api')
 
   app.useGlobalPipes(
