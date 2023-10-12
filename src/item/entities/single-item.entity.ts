@@ -7,32 +7,18 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Item } from '.'
+import { Item, SingleItemStatus } from '.'
 
-enum ItemState {
-  AVAILABLE = 'available',
-  UNAVAILABLE = 'unavailable',
-  FIXING = 'fixing',
-  BROKEN = 'broken',
-}
-
-@Entity('single-items')
+@Entity('single_items')
 export class SingleItem {
-  @ApiProperty({
-    example: 'cd533345-f1f3-48c9-a62e-7dc2da50c8f8',
-    uniqueItems: true,
-  })
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   sku: string
-  // TODO: create a real SKU
+  // TODO: create a real SKU in DB
 
   @ApiProperty({ nullable: true })
   @Column('text', { nullable: true })
   comments: string
-
-  @ApiProperty()
-  @Column({ type: 'enum', enum: ItemState, default: ItemState.AVAILABLE })
-  state: ItemState
 
   @ApiProperty()
   @CreateDateColumn({
@@ -50,6 +36,14 @@ export class SingleItem {
   public updatedAt: Date
 
   @ApiProperty()
-  @ManyToOne(() => Item, (item) => item.singleItems)
+  @ManyToOne(
+    () => SingleItemStatus,
+    (singleItemStatus) => singleItemStatus.singleItems,
+    { onDelete: 'CASCADE' },
+  )
+  singleItemStatus: SingleItemStatus
+
+  @ApiProperty()
+  @ManyToOne(() => Item, (item) => item, { onDelete: 'CASCADE' })
   item: Item
 }

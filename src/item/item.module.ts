@@ -1,14 +1,19 @@
 import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+
+import { AuthModule } from '../auth/auth.module'
 import { ItemService } from './item.service'
 import { ItemController } from './item.controller'
-import { AuthModule } from 'src/auth/auth.module'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { Category, Item } from './entities'
-import { SingleItem } from './entities/single-item.entity'
+import { Category, Item, SingleItem, SingleItemStatus } from './entities'
+import { ItemCatalogsController } from './item-catalogs.controller'
+import { ItemCatalogsService } from './item-catalogs.service'
 
 @Module({
-  controllers: [ItemController],
-  providers: [ItemService],
-  imports: [AuthModule, TypeOrmModule.forFeature([Item, Category, SingleItem])],
+  controllers: [ItemController, ItemCatalogsController],
+  providers: [ItemService, ItemCatalogsService],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forFeature([Item, Category, SingleItem, SingleItemStatus]),
+  ],
 })
 export class ItemModule {}

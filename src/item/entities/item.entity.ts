@@ -19,7 +19,7 @@ export class Item {
     uniqueItems: true,
   })
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  idItem: string
 
   @ApiProperty()
   @Column('text')
@@ -31,11 +31,15 @@ export class Item {
 
   @ApiProperty()
   @Column('int')
-  amount: number
+  numTotalItems: number
 
   @ApiProperty()
-  @Column('boolean', { default: true })
-  available: boolean
+  @Column('int')
+  numAvailableItems: number
+
+  @ApiProperty()
+  @Column('int')
+  numBorrowedItems: number
 
   @ApiProperty()
   @CreateDateColumn({
@@ -53,12 +57,17 @@ export class Item {
   public updatedAt: Date
 
   @ApiProperty()
-  @ManyToMany(() => Category, (category) => category.items, { nullable: true })
+  @ManyToMany(() => Category, (category) => category.items, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   categories: Category[]
 
   @ApiProperty()
-  @OneToMany(() => SingleItem, (singleItem) => singleItem.item)
+  @OneToMany(() => SingleItem, (singleItem) => singleItem.item, {
+    onDelete: 'CASCADE',
+  })
   singleItems: SingleItem[]
 
   // TODO: add calculated columns for borrowed and available amounts

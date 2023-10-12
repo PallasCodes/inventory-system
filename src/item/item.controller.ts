@@ -1,19 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Param } from '@nestjs/common'
 import { ItemService } from './item.service'
 import { CreateItemDto } from './dto/create-item.dto'
-import { UpdateItemDto } from './dto/update-item.dto'
-import { Auth } from 'src/auth/decorators'
+import { Auth } from '../auth/decorators'
 import { CreateCategoryDto } from './dto/create-category.dto'
 
-// @Auth()
+@Auth()
 @Controller('item')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
@@ -23,20 +14,9 @@ export class ItemController {
     return this.itemService.createItem(createItemDto)
   }
 
-  @Auth()
   @Get()
   findAllItems() {
     return this.itemService.findAllItems()
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemService.update(+id, updateItemDto)
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.itemService.remove(+id)
   }
 
   @Post('category')
@@ -47,6 +27,21 @@ export class ItemController {
   @Get('category')
   findAllCategories() {
     return this.itemService.findAllCategories()
+  }
+
+  @Get('category/:idCategory/items')
+  findCategoryItems(@Param('idCategory') idCategory: string) {
+    return this.itemService.findItemsByCategory(idCategory)
+  }
+
+  @Get('category/:idCategory')
+  findCategory(@Param('idCategory') idCategory: string) {
+    return this.itemService.findCategory(idCategory)
+  }
+
+  @Get('singleItem/:sku')
+  findOneSingleItem(@Param('sku') sku: string) {
+    return this.itemService.findOneSingleItem(sku)
   }
 
   @Get(':id')

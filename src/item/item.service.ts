@@ -3,9 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 
 import { CreateItemDto } from './dto/create-item.dto'
-import { UpdateItemDto } from './dto/update-item.dto'
-import { Category, Item } from './entities'
+import { Category, Item, SingleItemStatus } from './entities'
 import { CreateCategoryDto } from './dto/create-category.dto'
+import { SingleItem } from './entities/single-item.entity'
+import { handleDBError } from '../utils/handleDBError'
+import { CustomResponse } from '../utils/CustomResponse'
 
 @Injectable()
 export class ItemService {
@@ -13,58 +15,91 @@ export class ItemService {
     @InjectRepository(Item) private readonly itemRepository: Repository<Item>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(SingleItem)
+    private readonly singleItemRepository: Repository<SingleItem>,
+    @InjectRepository(SingleItemStatus)
+    private readonly singleItemStatusRepository: Repository<SingleItemStatus>,
   ) {}
 
   async createItem(createItemDto: CreateItemDto) {
-    try {
-      const { categoriesIds } = createItemDto
-      const item = this.itemRepository.create(createItemDto)
+    const {
+      categoriesIds,
+      singleItems: singleItemsData,
+      ...itemData
+    } = createItemDto
 
-      if (categoriesIds?.length > 0) {
-        const categories = await this.categoryRepository.findBy({
-          id: In(categoriesIds),
-        })
-        console.log(
-          '🚀 ~ file: item.service.ts:27 ~ ItemService ~ createItem ~ categories:',
-          categories,
+    try {
+      const statusCatalog = await this.singleItemStatusRepository.find()
+
+      const auxSingleItems: SingleItem[] = []
+
+      for (const singleItem of singleItemsData) {
+        const singleItemStatus = statusCatalog.filter(
+          (status) =>
+            status.idSingleItemStatus === singleItem.idSingleItemStatus,
+        )[0]
+
+        if (!singleItemStatus)
+          throw new BadRequestException('Single Item Status not found')
+
+        const newSingleItem = this.singleItemRepository.create(singleItem)
+        newSingleItem.singleItemStatus = singleItemStatus
+        await this.singleItemRepository.save(newSingleItem)
+
+        auxSingleItems.push(newSingleItem)
+      }
+
+      const categories = await this.categoryRepository.findBy({
+        idCategory: In(categoriesIds),
+      })
+
+      if (!categories)
+        throw new BadRequestException(
+          'There are no categories with the given IDs',
         )
 
-        if (!categories)
-          throw new BadRequestException(
-            'There are no categories with the given IDs',
-          )
+      const item = this.itemRepository.create(itemData)
 
-        item.categories = categories
-      }
+      item.categories = categories
+      item.numTotalItems = auxSingleItems.length
+      item.numAvailableItems = auxSingleItems.filter(
+        (singleItem) => singleItem.singleItemStatus.idSingleItemStatus === 1,
+      ).length
+      item.numBorrowedItems = 0
+      item.singleItems = auxSingleItems
 
       await this.itemRepository.save(item)
 
       return item
     } catch (error) {
-      console.log(error)
-      throw new Error(error)
+      handleDBError(error)
     }
   }
 
   async findAllItems() {
-    try {
-      const items = await this.itemRepository.find()
-      return items
-    } catch (error) {}
+    const items = await this.itemRepository.find()
+    return new CustomResponse(items)
   }
 
-  async findOneItem(id: string) {
-    const item = await this.itemRepository.findOneBy({ id })
-    if (item) return item
-    throw new BadRequestException(`Item not found with the given ID: ${id}`)
+  async findItemsByCategory(idCategory: string) {
+    const categoryItems = await this.itemRepository.find({
+      where: { categories: { idCategory } },
+      relations: ['categories'],
+    })
+    return new CustomResponse(categoryItems)
   }
 
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`
-  }
+  async findOneItem(idItem: string) {
+    const item = await this.itemRepository.findOne({
+      where: { idItem },
+      relations: ['singleItems', 'singleItems.singleItemStatus'],
+    })
+    if (!item)
+      throw new BadRequestException(
+        `Item not found with the given ID: ${idItem}`,
+      )
 
-  remove(id: number) {
-    return `This action removes a #${id} item`
+    return new CustomResponse(item)
   }
 
   async createCategory(createCategory: CreateCategoryDto) {
@@ -72,14 +107,37 @@ export class ItemService {
       const category = await this.categoryRepository.create(createCategory)
       await this.categoryRepository.save(category)
 
-      return category
+      return new CustomResponse(category)
     } catch (error) {
-      console.log(error)
+      handleDBError(error)
     }
   }
 
   async findAllCategories() {
-    const categories = await this.categoryRepository.find()
-    return categories
+    const categories = await this.categoryRepository.find({
+      order: { name: 'ASC' },
+    })
+
+    return new CustomResponse(categories)
+  }
+
+  async findOneSingleItem(sku: string) {
+    const singleItem = await this.singleItemRepository.findOneBy({ sku })
+    if (!singleItem)
+      throw new BadRequestException(
+        `Single Item with the given SKU (${sku}) not found`,
+      )
+
+    return new CustomResponse(singleItem)
+  }
+
+  async findCategory(idCategory: string) {
+    const category = await this.categoryRepository.findOneBy({ idCategory })
+    if (!category)
+      throw new BadRequestException(
+        `Category with the given ID (${idCategory}) not found`,
+      )
+
+    return new CustomResponse(category)
   }
 }

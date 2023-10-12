@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { Item } from './item.entity'
 
 @Entity('categories')
@@ -9,13 +16,39 @@ export class Category {
     uniqueItems: true,
   })
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  idCategory: string
 
   @ApiProperty()
   @Column('text')
   name: string
 
   @ApiProperty()
-  @ManyToMany(() => Item, (item) => item.categories, { nullable: true })
+  @Column('text', { nullable: true })
+  description: string
+
+  @ApiProperty()
+  @Column('text', { nullable: true })
+  imgUrl: string
+
+  @ApiProperty()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  public createdAt: Date
+
+  @ApiProperty()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
+  public updatedAt: Date
+
+  @ApiProperty()
+  @ManyToMany(() => Item, (item) => item.categories, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   items: Item[]
 }

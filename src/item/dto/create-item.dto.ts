@@ -1,16 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
   IsArray,
-  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
   Max,
   MaxLength,
   Min,
   MinLength,
 } from 'class-validator'
+import { CreateSingleItemDto } from './create-single-item.dto'
 
 export class CreateItemDto {
   @ApiProperty({ nullable: false, minLength: 1, maxLength: 160 })
@@ -32,17 +31,15 @@ export class CreateItemDto {
   @Max(999999)
   amount: number
 
-  @ApiProperty({ nullable: true, default: true })
-  @IsBoolean()
-  @IsOptional()
-  available: boolean
-
   @ApiProperty({
     nullable: true,
     example: ['cd533345-f1f3-48c9-a62e-7dc2da50c8f8'],
-    uniqueItems: true,
   })
   @IsOptional()
   @IsArray()
   categoriesIds?: string[]
+
+  @ApiProperty({ nullable: false })
+  @IsArray()
+  singleItems: CreateSingleItemDto[]
 }
