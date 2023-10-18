@@ -9,6 +9,11 @@ import { CreateCategoryDto } from './dto/create-category.dto'
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
+  @Get()
+  test() {
+    return 'Hello world'
+  }
+
   @Post()
   createItem(@Body() createItemDto: CreateItemDto) {
     return this.itemService.createItem(createItemDto)
