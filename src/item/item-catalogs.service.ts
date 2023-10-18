@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { SingleItemStatus } from './entities'
+import { CustomResponse } from 'src/utils/CustomResponse'
 
 @Injectable()
 export class ItemCatalogsService {
@@ -13,6 +14,6 @@ export class ItemCatalogsService {
 
   async getSingleItemStatuses() {
     const singleItemStatuses = await this.singleItemStatusRepository.find()
-    return singleItemStatuses
+    return new CustomResponse(singleItemStatuses)
   }
 }
