@@ -9,7 +9,7 @@ import { CreateCategoryDto } from './dto/create-category.dto'
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
-  @Get()
+  @Get('test')
   test() {
     return 'Hello world'
   }
