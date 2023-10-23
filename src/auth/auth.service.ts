@@ -13,6 +13,7 @@ import * as bcrypt from 'bcrypt'
 import { User } from './entities/user.entity'
 import { CreateUserDto, LoginUserDto } from './dto'
 import { JwtPayload } from './interfaces/jwt-payload.interface'
+import { CustomResponse } from 'src/utils/CustomResponse'
 
 @Injectable()
 export class AuthService {
@@ -52,7 +53,10 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Credenciales no válidas')
 
-    return { ...user, token: this.getJwtToken({ id: user.id }) }
+    return new CustomResponse({
+      ...user,
+      token: this.getJwtToken({ id: user.id }),
+    })
   }
 
   private getJwtToken(payload: JwtPayload) {
