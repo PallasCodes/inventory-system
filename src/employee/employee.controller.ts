@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common'
 import { EmployeeService } from './employee.service'
 import { CreateEmployeeDto } from './dto/create-employee.dto'
-import { UpdateEmployeeDto } from './dto/update-employee.dto'
 import { CreateBranchDto } from './dto/create-branch.dto'
 import { Auth } from 'src/auth/decorators'
 import { CreateDepartmentDto } from './dto/create-department.dto'
@@ -25,7 +16,7 @@ export class EmployeeController {
     return this.employeeService.createBranch(createBranchDto)
   }
 
-  @Get()
+  @Get('branch')
   findAllBranches() {
     return this.employeeService.findAllBranches()
   }
@@ -34,14 +25,6 @@ export class EmployeeController {
   findOneBranch(@Param('id') id: string) {
     return this.employeeService.findOneBranch(+id)
   }
-
-  // @Patch(':id')
-  // updateBranch(
-  //   @Param('id') id: string,
-  //   @Body() updateEmployeeDto: UpdateEmployeeDto,
-  // ) {
-  //   return this.employeeService.updateBranch(+id, updateEmployeeDto)
-  // }
 
   @Delete('branch/:id')
   removeBranch(@Param('id') id: string) {
@@ -59,6 +42,11 @@ export class EmployeeController {
     return this.employeeService.removeDepartment(id)
   }
 
+  @Get('department/:id')
+  findAllById(@Param('id') id: string) {
+    return this.employeeService.findDepartmentsById(id)
+  }
+
   // EMPLOYEE
   @Post()
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
@@ -74,14 +62,6 @@ export class EmployeeController {
   findOne(@Param('id') id: string) {
     return this.employeeService.findOne(+id)
   }
-
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateEmployeeDto: UpdateEmployeeDto,
-  // ) {
-  //   return this.employeeService.update(+id, updateEmployeeDto)
-  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

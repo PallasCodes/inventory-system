@@ -4,10 +4,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { Item, SingleItemStatus } from '.'
+import { Borrowing } from 'src/borrowing/entities/borrowing.entity'
 
 @Entity('single_items')
 export class SingleItem {
@@ -46,4 +48,10 @@ export class SingleItem {
   @ApiProperty()
   @ManyToOne(() => Item, (item) => item, { onDelete: 'CASCADE' })
   item: Item
+
+  @ApiProperty()
+  @OneToMany(() => Borrowing, (borrowing) => borrowing.singleItem, {
+    onDelete: 'CASCADE',
+  })
+  borrowings: Borrowing[]
 }

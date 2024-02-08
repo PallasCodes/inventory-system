@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
+import { Employee } from './employee.entity'
 import { Branch } from './branch.entity'
 
 @Entity('departments')
@@ -15,6 +22,15 @@ export class Department {
   @Column('text', { unique: true })
   name: string
 
-  @ManyToOne(() => Branch, (branch) => branch.departments)
+  @ApiProperty()
+  @OneToMany(() => Employee, (employee) => employee.department, {
+    onDelete: 'CASCADE',
+  })
+  employees: Employee[]
+
+  @ApiProperty()
+  @ManyToOne(() => Branch, (branch) => branch.departments, {
+    onDelete: 'CASCADE',
+  })
   branch: Branch
 }

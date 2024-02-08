@@ -11,11 +11,13 @@ export class Branch {
   @PrimaryGeneratedColumn('uuid')
   idBranch: string
 
+  @ApiProperty()
   @Column('text', { unique: true })
   name: string
 
+  @ApiProperty()
   @OneToMany(() => Department, (department) => department.branch, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   departments: Department[]
 }

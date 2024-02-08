@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { CreateEmployeeDto } from './dto/create-employee.dto'
-import { UpdateEmployeeDto } from './dto/update-employee.dto'
-import { CreateBranchDto } from './dto/create-branch.dto'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Branch, Department } from './entities'
 import { Repository } from 'typeorm'
+
+import { CreateEmployeeDto } from './dto/create-employee.dto'
+import { CreateBranchDto } from './dto/create-branch.dto'
+import { Branch, Department, Employee } from './entities'
 import { CustomResponse } from 'src/utils/CustomResponse'
 import { CreateDepartmentDto } from './dto/create-department.dto'
 
@@ -15,6 +15,8 @@ export class EmployeeService {
     private readonly branchRepository: Repository<Branch>,
     @InjectRepository(Department)
     private readonly departmentRepository: Repository<Department>,
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
   ) {}
 
   // BRANCH
@@ -25,37 +27,38 @@ export class EmployeeService {
     return new CustomResponse(branch)
   }
 
-  findAllBranches() {
-    return `This action returns all employee`
+  async findAllBranches() {
+    const branches = await this.branchRepository.find({
+      order: {
+        name: 'ASC',
+      },
+    })
+
+    return new CustomResponse(branches)
   }
 
   findOneBranch(id: number) {
     return `This action returns a #${id} employee`
   }
 
-  // updateBranch(id: number, updateBranchDto: UpdateBranchDto) {
-  //   return `This action updates a #${id} employee`
-  // }
-
   async removeBranch(id: string) {
     await this.branchRepository.delete(id)
     return new CustomResponse(null)
-    // TODO: add proper return message and handle errors
+    // TODO: add a proper return message and handle errors
   }
 
   // DEPARTMENT
-  async createDepartment(createDepartmentDto: CreateDepartmentDto) {
-    const branch = await this.branchRepository.findOneBy({
-      idBranch: createDepartmentDto.idBranch,
-    })
-    if (!branch) {
-      throw new BadRequestException(
-        `Branch not found with the given ID: ${createDepartmentDto.idBranch}`,
-      )
-    }
+  async findDepartmentsById(branch: string) {
+    const departments =
+      (await this.departmentRepository.findBy({
+        branch: { idBranch: branch },
+      })) || []
 
+    return new CustomResponse(departments)
+  }
+
+  async createDepartment(createDepartmentDto: CreateDepartmentDto) {
     const department = this.departmentRepository.create(createDepartmentDto)
-    department.branch = branch
     await this.departmentRepository.save(department)
 
     return new CustomResponse(department)
@@ -64,25 +67,43 @@ export class EmployeeService {
   async removeDepartment(id: string) {
     await this.departmentRepository.delete(id)
     return new CustomResponse(null)
-    // TODO: add proper return message and handle errors
+    // TODO: add a proper return message and handle error
   }
 
   // EMPLOYEE
-  create(createEmployeeDto: CreateEmployeeDto) {
-    return 'This action adds a new employee'
+  async create(createEmployeeDto: CreateEmployeeDto) {
+    const department = await this.departmentRepository.findOneBy({
+      idDepartment: createEmployeeDto.idDepartment,
+    })
+    if (!department) {
+      throw new BadRequestException(
+        `Department with the given ID not found: ${createEmployeeDto.idDepartment}`,
+      )
+    }
+
+    const employee = this.employeeRepository.create(createEmployeeDto)
+    employee.department = department
+    await this.employeeRepository.save(employee)
+
+    return new CustomResponse(employee)
   }
 
-  findAll() {
-    return `This action returns all employee`
+  async findAll() {
+    // const employees = await this.employeeRepository.find({
+    //   order: { fullName: 'ASC' },
+    //   relations: ['department'],
+    // })
+    const employees = await this.employeeRepository
+      .createQueryBuilder('employee')
+      .innerJoinAndSelect('employee.department', 'department')
+      .innerJoinAndSelect('department.branch', 'branch')
+      .getMany()
+    return new CustomResponse(employees)
   }
 
   findOne(id: number) {
     return `This action returns a #${id} employee`
   }
-
-  // update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-  //   return `This action updates a #${id} employee`
-  // }
 
   remove(id: number) {
     return `This action removes a #${id} employee`
