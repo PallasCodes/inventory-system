@@ -89,15 +89,12 @@ export class EmployeeService {
   }
 
   async findAll() {
-    // const employees = await this.employeeRepository.find({
-    //   order: { fullName: 'ASC' },
-    //   relations: ['department'],
-    // })
     const employees = await this.employeeRepository
       .createQueryBuilder('employee')
       .innerJoinAndSelect('employee.department', 'department')
       .innerJoinAndSelect('department.branch', 'branch')
       .getMany()
+
     return new CustomResponse(employees)
   }
 

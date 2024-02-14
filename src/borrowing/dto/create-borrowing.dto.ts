@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
-  IsDate,
+  IsDateString,
   IsOptional,
   IsString,
   IsUUID,
@@ -10,18 +10,13 @@ import {
 
 export class CreateBorrowingDto {
   @ApiProperty({ nullable: false })
-  @IsDate()
+  @IsDateString()
   borrowingDate: string
 
   @ApiProperty({ nullable: true })
-  @IsDate()
+  @IsDateString()
   @IsOptional()
   borrowingDeadline: string
-
-  @ApiProperty({ nullable: true })
-  @IsDate()
-  @IsOptional()
-  returnDate: string
 
   @ApiProperty({ nullable: true })
   @IsString()

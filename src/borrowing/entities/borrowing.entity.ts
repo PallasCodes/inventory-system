@@ -16,7 +16,8 @@ export class Borrowing {
   @Column('date')
   borrowingDate: string
 
-  // 'status'
+  // 'statusId'
+
   @ApiProperty()
   @Column('date', { nullable: true })
   borrowingDeadline: string
