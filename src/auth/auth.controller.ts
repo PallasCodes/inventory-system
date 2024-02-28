@@ -4,6 +4,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
 import { CreateUserDto, LoginUserDto } from './dto'
 import { User } from './entities/user.entity'
+import { Auth } from './decorators'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -22,5 +23,11 @@ export class AuthController {
   @Post('login')
   login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto)
+  }
+
+  @Auth()
+  @Post('check-status')
+  checkStatus() {
+    return 'Token still works'
   }
 }
