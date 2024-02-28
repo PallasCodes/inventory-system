@@ -66,6 +66,7 @@ export class EmployeeService {
 
   async removeDepartment(id: string) {
     await this.departmentRepository.delete(id)
+
     return new CustomResponse(null)
     // TODO: add a proper return message and handle error
   }

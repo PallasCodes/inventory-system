@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+
 import { Employee } from '../../employee/entities/employee.entity'
 import { SingleItem } from 'src/item/entities'
 
@@ -16,7 +17,9 @@ export class Borrowing {
   @Column('date')
   borrowingDate: string
 
-  // 'statusId'
+  @ApiProperty()
+  @Column('bool', { default: false })
+  returned: boolean
 
   @ApiProperty()
   @Column('date', { nullable: true })

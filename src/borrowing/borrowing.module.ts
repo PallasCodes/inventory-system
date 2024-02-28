@@ -5,7 +5,7 @@ import { BorrowingService } from './borrowing.service'
 import { BorrowingController } from './borrowing.controller'
 import { AuthModule } from 'src/auth/auth.module'
 import { Borrowing } from './entities/borrowing.entity'
-import { SingleItem } from 'src/item/entities'
+import { SingleItem, SingleItemStatus } from 'src/item/entities'
 import { Employee } from 'src/employee/entities'
 
 @Module({
@@ -13,7 +13,12 @@ import { Employee } from 'src/employee/entities'
   providers: [BorrowingService],
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([Borrowing, SingleItem, Employee]),
+    TypeOrmModule.forFeature([
+      Borrowing,
+      SingleItem,
+      Employee,
+      SingleItemStatus,
+    ]),
   ],
 })
 export class BorrowingModule {}
