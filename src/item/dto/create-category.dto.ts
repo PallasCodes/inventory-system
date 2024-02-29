@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
+import {
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+} from 'class-validator'
 
 export class CreateCategoryDto {
   @ApiProperty({ nullable: false, minLength: 1, maxLength: 160 })
@@ -13,4 +19,9 @@ export class CreateCategoryDto {
   @MinLength(1)
   @MaxLength(500)
   description: string
+
+  @ApiProperty({ nullable: true })
+  @IsOptional()
+  @IsUrl()
+  imgUrl: string
 }

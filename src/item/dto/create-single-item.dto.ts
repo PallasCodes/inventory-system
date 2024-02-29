@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   MaxLength,
   MinLength,
 } from 'class-validator'
@@ -18,4 +19,8 @@ export class CreateSingleItemDto {
   @ApiProperty({ nullable: false })
   @IsNumber()
   idSingleItemStatus: number
+
+  @ApiProperty({ nullable: false })
+  @IsUrl()
+  imgUrl: string
 }

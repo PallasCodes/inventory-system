@@ -22,6 +22,10 @@ export class SingleItem {
   @Column('text', { nullable: true })
   comments: string
 
+  @ApiProperty({ nullable: true })
+  @Column('text', { nullable: true })
+  imgUrl: string
+
   @ApiProperty()
   @CreateDateColumn({
     type: 'timestamp',
