@@ -21,6 +21,30 @@ export class ItemService {
     private readonly singleItemStatusRepository: Repository<SingleItemStatus>,
   ) {}
 
+  async getItemsCount() {
+    const queryResults = await this.singleItemRepository.query(`
+      SELECT 
+	      SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 1 THEN 1 ELSE 0 END) AS available,
+	      SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 2 THEN 1 ELSE 0 END) AS not_available,
+        SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 3 THEN 1 ELSE 0 END) AS fixing,
+        SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 4 THEN 1 ELSE 0 END) AS borrowed
+      FROM single_items
+    `)
+
+    const counts = queryResults[0]
+
+    for (const key in counts) {
+      counts[key] = parseInt(counts[key], 10)
+    }
+
+    counts.totals = Object.values(counts).reduce(
+      (pv: any, cv: any) => pv + cv,
+      0,
+    )
+
+    return new CustomResponse(counts)
+  }
+
   async createItem(createItemDto: CreateItemDto) {
     const {
       categoriesIds,

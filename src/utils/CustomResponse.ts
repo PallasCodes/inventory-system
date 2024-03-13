@@ -28,7 +28,7 @@ export class ResponseMessage {
   type: MessageType
 
   constructor(
-    message = 'No action executed on the server',
+    message = null,
     component: MessageComponent = MessageComponent.TOAST,
     type: MessageType = MessageType.INFO,
   ) {

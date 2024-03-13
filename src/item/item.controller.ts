@@ -9,9 +9,9 @@ import { CreateCategoryDto } from './dto/create-category.dto'
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
-  @Get('test')
+  @Get('counts')
   test() {
-    return 'Hello world'
+    return this.itemService.getItemsCount()
   }
 
   @Post()
