@@ -7,7 +7,12 @@ import { Category, Item, SingleItemStatus } from './entities'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { SingleItem } from './entities/single-item.entity'
 import { handleDBError } from '../utils/handleDBError'
-import { CustomResponse } from '../utils/CustomResponse'
+import {
+  CustomResponse,
+  MessageComponent,
+  MessageType,
+  ResponseMessage,
+} from '../utils/CustomResponse'
 
 @Injectable()
 export class ItemService {
@@ -131,7 +136,14 @@ export class ItemService {
       const category = await this.categoryRepository.create(createCategory)
       await this.categoryRepository.save(category)
 
-      return new CustomResponse(category)
+      return new CustomResponse(
+        category,
+        new ResponseMessage(
+          'Categoría registrada correctamente',
+          MessageComponent.TOAST,
+          MessageType.SUCCESS,
+        ),
+      )
     } catch (error) {
       handleDBError(error)
     }
