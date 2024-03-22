@@ -31,8 +31,8 @@ export class ItemService {
       SELECT 
 	      SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 1 THEN 1 ELSE 0 END) AS available,
 	      SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 2 THEN 1 ELSE 0 END) AS not_available,
-        SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 3 THEN 1 ELSE 0 END) AS fixing,
-        SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 4 THEN 1 ELSE 0 END) AS borrowed
+        SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 3 THEN 1 ELSE 0 END) AS borrowed,
+        SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 4 THEN 1 ELSE 0 END) AS fixing
       FROM single_items
     `)
 
@@ -96,6 +96,8 @@ export class ItemService {
       ).length
       item.numBorrowedItems = 0
       item.singleItems = auxSingleItems
+
+      // TODO: add calculated columns
 
       await this.itemRepository.save(item)
 
