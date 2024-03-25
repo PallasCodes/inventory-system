@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
   IsArray,
+  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -42,4 +43,9 @@ export class CreateItemDto {
   @ApiProperty({ nullable: false })
   @IsArray()
   singleItems: CreateSingleItemDto[]
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  registerSIDetails: boolean
 }

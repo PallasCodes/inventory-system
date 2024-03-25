@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { CreateBorrowingDto } from './dto/create-borrowing.dto'
-import { UpdateBorrowingDto } from './dto/update-borrowing.dto'
 import { SingleItem, SingleItemStatus } from 'src/item/entities'
 import { Employee } from 'src/employee/entities'
 import { Borrowing } from './entities/borrowing.entity'
@@ -92,6 +91,16 @@ export class BorrowingService {
       where: { returned: false },
       order: { borrowingDate: 'DESC' },
       relations: ['employee', 'singleItem', 'singleItem.item'],
+    })
+
+    return new CustomResponse(borrowings)
+  }
+
+  async getBorrowingsHistory(sku: string) {
+    const borrowings = await this.borrowingRepository.find({
+      relations: ['employee', 'singleItem', 'singleItem.item'],
+      where: { singleItem: { sku } },
+      order: { borrowingDate: 'ASC' },
     })
 
     return new CustomResponse(borrowings)
