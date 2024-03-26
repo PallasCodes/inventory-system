@@ -10,7 +10,7 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Get('counts')
-  test() {
+  getCounts() {
     return this.itemService.getItemsCount()
   }
 

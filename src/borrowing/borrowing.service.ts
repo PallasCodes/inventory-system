@@ -98,7 +98,13 @@ export class BorrowingService {
 
   async getBorrowingsHistory(sku: string) {
     const borrowings = await this.borrowingRepository.find({
-      relations: ['employee', 'singleItem', 'singleItem.item'],
+      relations: [
+        'employee',
+        'singleItem',
+        'singleItem.item',
+        'employee.department',
+        'employee.department.branch',
+      ],
       where: { singleItem: { sku } },
       order: { borrowingDate: 'ASC' },
     })
