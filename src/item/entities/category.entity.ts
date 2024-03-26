@@ -47,7 +47,6 @@ export class Category {
 
   @ApiProperty()
   @ManyToMany(() => Item, (item) => item.categories, {
-    nullable: true,
     onDelete: 'CASCADE',
   })
   items: Item[]

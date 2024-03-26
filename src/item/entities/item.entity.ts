@@ -58,7 +58,6 @@ export class Item {
 
   @ApiProperty()
   @ManyToMany(() => Category, (category) => category.items, {
-    nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinTable()

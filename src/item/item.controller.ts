@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common'
 import { ItemService } from './item.service'
 import { CreateItemDto } from './dto/create-item.dto'
 import { Auth } from '../auth/decorators'
@@ -32,6 +32,11 @@ export class ItemController {
   @Get('category')
   findAllCategories() {
     return this.itemService.findAllCategories()
+  }
+
+  @Delete('category/:idCategory')
+  deleteCategory(@Param('idCategory') idCategory: string) {
+    return this.itemService.deleteCategory(idCategory)
   }
 
   @Get('category/:idCategory/items')

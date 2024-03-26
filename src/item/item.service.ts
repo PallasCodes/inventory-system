@@ -194,4 +194,22 @@ export class ItemService {
 
     return new CustomResponse(category)
   }
+
+  async deleteCategory(idCategory: string) {
+    await this.categoryRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Category)
+      .where('idCategory = :idCategory', { idCategory })
+      .execute()
+
+    return new CustomResponse(
+      { message: 'Category deleted succesfully' },
+      new ResponseMessage(
+        'Categoría eliminada',
+        MessageComponent.TOAST,
+        MessageType.SUCCESS,
+      ),
+    )
+  }
 }
