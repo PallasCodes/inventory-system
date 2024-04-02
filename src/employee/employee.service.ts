@@ -5,7 +5,12 @@ import { Repository } from 'typeorm'
 import { CreateEmployeeDto } from './dto/create-employee.dto'
 import { CreateBranchDto } from './dto/create-branch.dto'
 import { Branch, Department, Employee } from './entities'
-import { CustomResponse } from 'src/utils/CustomResponse'
+import {
+  CustomResponse,
+  MessageComponent,
+  MessageType,
+  ResponseMessage,
+} from 'src/utils/CustomResponse'
 import { CreateDepartmentDto } from './dto/create-department.dto'
 
 @Injectable()
@@ -86,7 +91,14 @@ export class EmployeeService {
     employee.department = department
     await this.employeeRepository.save(employee)
 
-    return new CustomResponse(employee)
+    return new CustomResponse(
+      employee,
+      new ResponseMessage(
+        'Empleado registrado correctamente',
+        MessageComponent.TOAST,
+        MessageType.SUCCESS,
+      ),
+    )
   }
 
   async findAll() {

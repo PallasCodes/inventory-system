@@ -80,7 +80,12 @@ export class BorrowingService {
   async findAll() {
     const borrowings = await this.borrowingRepository.find({
       order: { borrowingDate: 'DESC' },
-      relations: ['employee', 'singleItem', 'singleItem.item'],
+      relations: [
+        'employee',
+        'singleItem',
+        'singleItem.item',
+        'singleItem.item.categories',
+      ],
     })
 
     return new CustomResponse(borrowings)
