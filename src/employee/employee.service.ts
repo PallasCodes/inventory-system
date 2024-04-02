@@ -94,7 +94,15 @@ export class EmployeeService {
       .createQueryBuilder('employee')
       .innerJoinAndSelect('employee.department', 'department')
       .innerJoinAndSelect('department.branch', 'branch')
-      .getMany()
+      .select([
+        'employee.fullName as full_name',
+        'department.name as department',
+        'branch.name as branch',
+        'employee.idEmployee as id_employee',
+        'branch.idBranch as id_branch',
+        'department.idDepartment as id_department',
+      ])
+      .getRawMany()
 
     return new CustomResponse(employees)
   }

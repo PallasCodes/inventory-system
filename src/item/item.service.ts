@@ -124,7 +124,8 @@ export class ItemService {
   }
 
   async findAllItems() {
-    const items = await this.itemRepository.find()
+    const items = await this.itemRepository.find({ relations: ['categories'] })
+
     return new CustomResponse(items)
   }
 
