@@ -13,6 +13,7 @@ import {
   MessageType,
   ResponseMessage,
 } from '../utils/CustomResponse'
+import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 
 @Injectable()
 export class ItemService {
@@ -212,5 +213,28 @@ export class ItemService {
         MessageType.SUCCESS,
       ),
     )
+  }
+
+  async generateSkuPrefix(generateSkuPrefixDto: GenerateSkuPrefixDto) {
+    console.log(generateSkuPrefixDto.skuPrefix)
+
+    let auxSkuPrefix = generateSkuPrefixDto.skuPrefix.toUpperCase()
+
+    let items = await this.itemRepository.find({
+      where: { skuPrefix: auxSkuPrefix },
+    })
+
+    while (items.length > 0) {
+      auxSkuPrefix += (
+        String.fromCharCode(0 | (Math.random() * 26 + 97)) +
+        String.fromCharCode(0 | (Math.random() * 26 + 97))
+      ).toUpperCase()
+
+      items = await this.itemRepository.find({
+        where: { skuPrefix: auxSkuPrefix },
+      })
+    }
+
+    return new CustomResponse({ skuPrefix: auxSkuPrefix })
   }
 }

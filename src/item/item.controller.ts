@@ -3,6 +3,7 @@ import { ItemService } from './item.service'
 import { CreateItemDto } from './dto/create-item.dto'
 import { Auth } from '../auth/decorators'
 import { CreateCategoryDto } from './dto/create-category.dto'
+import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 
 @Auth()
 @Controller('item')
@@ -22,6 +23,11 @@ export class ItemController {
   @Get()
   findAllItems() {
     return this.itemService.findAllItems()
+  }
+
+  @Post('generateSkuPrefix')
+  generateSkuPrefix(@Body() generateSkuPrefixDto: GenerateSkuPrefixDto) {
+    return this.itemService.generateSkuPrefix(generateSkuPrefixDto)
   }
 
   @Post('category')

@@ -11,6 +11,7 @@ import {
   MinLength,
 } from 'class-validator'
 import { CreateSingleItemDto } from './create-single-item.dto'
+import { Unique } from 'typeorm'
 
 export class CreateItemDto {
   @ApiProperty({ nullable: false, minLength: 1, maxLength: 160 })
@@ -48,4 +49,10 @@ export class CreateItemDto {
   @IsOptional()
   @IsBoolean()
   registerSIDetails: boolean
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(5)
+  skuPrefix: string
 }

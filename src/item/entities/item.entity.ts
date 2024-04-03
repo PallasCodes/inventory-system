@@ -42,6 +42,10 @@ export class Item {
   numBorrowedItems: number
 
   @ApiProperty()
+  @Column('text', { unique: true })
+  skuPrefix: string
+
+  @ApiProperty()
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',

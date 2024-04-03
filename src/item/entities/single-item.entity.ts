@@ -5,7 +5,6 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { Item, SingleItemStatus } from '.'
@@ -14,9 +13,8 @@ import { Borrowing } from 'src/borrowing/entities/borrowing.entity'
 @Entity('single_items')
 export class SingleItem {
   @ApiProperty()
-  @PrimaryGeneratedColumn('uuid')
+  @Column('text', { unique: true, primary: true })
   sku: string
-  // TODO: create a real SKU in DB
 
   @ApiProperty({ nullable: true })
   @Column('text', { nullable: true })

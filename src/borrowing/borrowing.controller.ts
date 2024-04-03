@@ -16,6 +16,12 @@ export class BorrowingController {
   registerReturn(@Body() borrowingReturnDto: BorrowingReturnDto) {
     return this.borrowingService.registerBorrowingReturn(borrowingReturnDto)
   }
+
+  @Post('cancel/:idBorrowing')
+  cancelBorrowing(@Param('idBorrowing') idBorrowing: string) {
+    return this.borrowingService.cancelBorrowing(idBorrowing)
+  }
+
   @Get('due-borrowings')
   listDueBorrowings() {
     return this.borrowingService.listDueBorrowings()

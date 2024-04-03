@@ -6,7 +6,12 @@ import { CreateBorrowingDto } from './dto/create-borrowing.dto'
 import { SingleItem, SingleItemStatus } from 'src/item/entities'
 import { Employee } from 'src/employee/entities'
 import { Borrowing } from './entities/borrowing.entity'
-import { CustomResponse } from 'src/utils/CustomResponse'
+import {
+  CustomResponse,
+  MessageComponent,
+  MessageType,
+  ResponseMessage,
+} from 'src/utils/CustomResponse'
 import { BorrowingReturnDto } from './dto/borrowing-return.dto'
 
 @Injectable()
@@ -115,5 +120,25 @@ export class BorrowingService {
     })
 
     return new CustomResponse(borrowings)
+  }
+
+  async cancelBorrowing(idBorrowing: string) {
+    const borrowing = await this.borrowingRepository.findOneBy({ idBorrowing })
+
+    if (!borrowing) throw new BadRequestException('No se encontró el prestamo')
+
+    borrowing.returned = false
+    borrowing.returnDate = null
+
+    await this.borrowingRepository.save(borrowing)
+
+    return new CustomResponse(
+      borrowing,
+      new ResponseMessage(
+        'Retorno cancelado',
+        MessageComponent.TOAST,
+        MessageType.SUCCESS,
+      ),
+    )
   }
 }
