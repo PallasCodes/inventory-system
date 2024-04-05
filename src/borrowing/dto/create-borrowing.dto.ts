@@ -30,6 +30,7 @@ export class CreateBorrowingDto {
   idEmployee: string
 
   @ApiProperty()
-  @IsUUID('4')
-  idSingleItem: string
+  @IsString()
+  @MinLength(5)
+  sku: string
 }

@@ -29,11 +29,11 @@ export class BorrowingService {
 
   async create(createBorrowingDto: CreateBorrowingDto) {
     const singleItem = await this.singleItemRepository.findOneBy({
-      sku: createBorrowingDto.idSingleItem,
+      sku: createBorrowingDto.sku,
     })
     if (!singleItem) {
       throw new BadRequestException(
-        `No single item found with the given ID: ${createBorrowingDto.idSingleItem}`,
+        `No single item found with the given ID: ${createBorrowingDto.sku}`,
       )
     }
 
@@ -54,8 +54,9 @@ export class BorrowingService {
 
     singleItem.singleItemStatus =
       await this.singleItemStatusRepository.findOneBy({
-        name: 'Prestado',
+        idSingleItemStatus: 3,
       })
+    // TODO: add singleItem catalog
     await this.singleItemRepository.save(singleItem)
 
     return new CustomResponse(borrowing)

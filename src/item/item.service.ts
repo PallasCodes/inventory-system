@@ -188,13 +188,34 @@ export class ItemService {
   }
 
   async findCategory(idCategory: string) {
-    const category = await this.categoryRepository.findOneBy({ idCategory })
+    let category, itemsCount, singleItemsCount
+
+    const getCategory = async () => {
+      category = await this.categoryRepository.findOne({
+        where: { idCategory },
+      })
+    }
+
+    const getItemsCount = async () => {
+      itemsCount = await this.itemRepository.count({
+        where: { categories: { idCategory } },
+      })
+    }
+
+    const getSingleItemsCount = async () => {
+      singleItemsCount = await this.singleItemRepository.count({
+        where: { item: { categories: { idCategory } } },
+      })
+    }
+
+    await Promise.all([getCategory(), getItemsCount(), getSingleItemsCount()])
+
     if (!category)
       throw new BadRequestException(
         `Category with the given ID (${idCategory}) not found`,
       )
 
-    return new CustomResponse(category)
+    return new CustomResponse({ category, itemsCount, singleItemsCount })
   }
 
   async deleteCategory(idCategory: string) {

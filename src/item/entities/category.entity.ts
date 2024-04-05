@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Item } from './item.entity'
+import { Expose } from 'class-transformer'
 
 @Entity('categories')
 export class Category {
