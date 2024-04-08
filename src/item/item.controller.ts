@@ -55,6 +55,11 @@ export class ItemController {
     return this.itemService.findCategory(idCategory)
   }
 
+  @Delete('singleItem/:sku')
+  deleteSingleItem(@Param('sku') sku: string) {
+    return this.itemService.deleteSingleItem(sku)
+  }
+
   @Get('singleItem/:sku')
   findOneSingleItem(@Param('sku') sku: string) {
     return this.itemService.findOneSingleItem(sku)

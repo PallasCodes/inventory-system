@@ -237,8 +237,6 @@ export class ItemService {
   }
 
   async generateSkuPrefix(generateSkuPrefixDto: GenerateSkuPrefixDto) {
-    console.log(generateSkuPrefixDto.skuPrefix)
-
     let auxSkuPrefix = generateSkuPrefixDto.skuPrefix.toUpperCase()
 
     let items = await this.itemRepository.find({
@@ -257,5 +255,26 @@ export class ItemService {
     }
 
     return new CustomResponse({ skuPrefix: auxSkuPrefix })
+  }
+
+  async deleteSingleItem(sku: string) {
+    const singleItem = await this.singleItemRepository.findOneBy({ sku })
+
+    if (!singleItem) {
+      throw new BadRequestException(
+        `No single item found with the given SKU: ${sku}`,
+      )
+    }
+
+    await this.singleItemRepository.remove(singleItem)
+
+    return new CustomResponse(
+      singleItem,
+      new ResponseMessage(
+        'Item eliminado correctamente',
+        MessageComponent.TOAST,
+        MessageType.SUCCESS,
+      ),
+    )
   }
 }
