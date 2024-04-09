@@ -56,6 +56,7 @@ export class AuthService {
     return new CustomResponse({
       ...user,
       token: this.getJwtToken({ id: user.id }),
+      expiresIn: 7200000,
     })
   }
 

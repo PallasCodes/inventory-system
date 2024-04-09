@@ -24,6 +24,7 @@ import { JwtStrategy } from './strategies/jwt.strategy'
           secret: configService.get('JWT_SECRET'),
           signOptions: {
             expiresIn: '2h',
+            // TODO: add env variable
           },
         }
       },

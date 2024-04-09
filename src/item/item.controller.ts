@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common'
 import { ItemService } from './item.service'
 import { CreateItemDto } from './dto/create-item.dto'
 import { Auth } from '../auth/decorators'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
+import { UpdateCategoryDto } from './dto/update-category.dto'
 
 @Auth()
 @Controller('item')
@@ -38,6 +39,11 @@ export class ItemController {
   @Get('category')
   findAllCategories() {
     return this.itemService.findAllCategories()
+  }
+
+  @Put('category')
+  updateCategory(@Body() updateCategoryDto: UpdateCategoryDto) {
+    return this.itemService.updateCategory(updateCategoryDto)
   }
 
   @Delete('category/:idCategory')

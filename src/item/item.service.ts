@@ -14,6 +14,7 @@ import {
   ResponseMessage,
 } from '../utils/CustomResponse'
 import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
+import { UpdateCategoryDto } from './dto/update-category.dto'
 
 @Injectable()
 export class ItemService {
@@ -276,5 +277,14 @@ export class ItemService {
         MessageType.SUCCESS,
       ),
     )
+  }
+
+  async updateCategory(updateCategoryDto: UpdateCategoryDto) {
+    const updatedCategory = await this.categoryRepository.update(
+      updateCategoryDto.idCategory,
+      updateCategoryDto,
+    )
+
+    return new CustomResponse(updatedCategory)
   }
 }

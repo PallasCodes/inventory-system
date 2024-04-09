@@ -38,8 +38,16 @@ export class Item {
   numAvailableItems: number
 
   @ApiProperty()
-  @Column('int')
+  @Column('int', { default: 0 })
   numBorrowedItems: number
+
+  @ApiProperty()
+  @Column('int', { default: 0 })
+  numUnavailableItems: number
+
+  @ApiProperty()
+  @Column('int', { default: 0 })
+  numFixingItems: number
 
   @ApiProperty()
   @Column('text', { unique: true })
