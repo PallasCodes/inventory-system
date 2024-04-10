@@ -112,10 +112,14 @@ export class ItemService {
       item.numAvailableItems = auxSingleItems.filter(
         (singleItem) => singleItem.singleItemStatus.idSingleItemStatus === 1,
       ).length
+      item.numUnavailableItems = auxSingleItems.filter(
+        (singleItem) => singleItem.singleItemStatus.idSingleItemStatus === 2,
+      ).length
+      item.numFixingItems = auxSingleItems.filter(
+        (singleItem) => singleItem.singleItemStatus.idSingleItemStatus === 4,
+      ).length
       item.numBorrowedItems = 0
       item.singleItems = auxSingleItems
-
-      // TODO: add calculated columns
 
       await this.itemRepository.save(item)
 
