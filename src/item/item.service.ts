@@ -284,11 +284,22 @@ export class ItemService {
   }
 
   async updateCategory(updateCategoryDto: UpdateCategoryDto) {
-    const updatedCategory = await this.categoryRepository.update(
+    const updatedCategory = this.categoryRepository.findOneByOrFail({
+      idCategory: updateCategoryDto.idCategory,
+    })
+
+    await this.categoryRepository.update(
       updateCategoryDto.idCategory,
       updateCategoryDto,
     )
 
-    return new CustomResponse(updatedCategory)
+    return new CustomResponse(
+      updatedCategory,
+      new ResponseMessage(
+        'Categoría actualizada correctamente',
+        MessageComponent.TOAST,
+        MessageType.SUCCESS,
+      ),
+    )
   }
 }
