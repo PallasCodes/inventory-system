@@ -302,4 +302,22 @@ export class ItemService {
       ),
     )
   }
+
+  async deleteItem(idItem: string) {
+    await this.itemRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Item)
+      .where('idItem = :idItem', { idItem })
+      .execute()
+
+    return new CustomResponse(
+      { message: 'Item deleted' },
+      new ResponseMessage(
+        'Modelo eliminado correctamente',
+        MessageComponent.TOAST,
+        MessageType.SUCCESS,
+      ),
+    )
+  }
 }

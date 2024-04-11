@@ -142,4 +142,21 @@ export class BorrowingService {
       ),
     )
   }
+
+  async deleteBorrowing(idBorrowing: string) {
+    const borrowing = await this.borrowingRepository.findOneByOrFail({
+      idBorrowing,
+    })
+
+    await this.borrowingRepository.remove(borrowing)
+
+    return new CustomResponse(
+      borrowing,
+      new ResponseMessage(
+        'Préstamo eliminado correctamente',
+        MessageComponent.TOAST,
+        MessageType.SUCCESS,
+      ),
+    )
+  }
 }

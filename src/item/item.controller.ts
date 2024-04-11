@@ -21,6 +21,11 @@ export class ItemController {
     return this.itemService.createItem(createItemDto)
   }
 
+  @Delete(':idItem')
+  deleteItem(@Param('idItem') idItem: string) {
+    return this.itemService.deleteItem(idItem)
+  }
+
   @Get()
   findAllItems() {
     return this.itemService.findAllItems()

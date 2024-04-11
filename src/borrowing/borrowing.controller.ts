@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common'
 import { BorrowingService } from './borrowing.service'
 import { CreateBorrowingDto } from './dto/create-borrowing.dto'
 import { BorrowingReturnDto } from './dto/borrowing-return.dto'
@@ -10,6 +10,11 @@ export class BorrowingController {
   @Post()
   create(@Body() createBorrowingDto: CreateBorrowingDto) {
     return this.borrowingService.create(createBorrowingDto)
+  }
+
+  @Delete(':idBorrowing')
+  deleteBorrowing(@Param('idBorrowing') idBorrowing: string) {
+    return this.borrowingService.deleteBorrowing(idBorrowing)
   }
 
   @Post('register-return')
