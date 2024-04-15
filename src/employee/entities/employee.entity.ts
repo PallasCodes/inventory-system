@@ -29,7 +29,7 @@ export class Employee {
 
   @ApiProperty()
   @OneToMany(() => Borrowing, (borrowing) => borrowing.employee, {
-    onDelete: 'CASCADE',
+    nullable: true,
   })
   borrowings: Borrowing
 }

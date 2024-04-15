@@ -30,7 +30,7 @@ export class ResponseMessage {
   constructor(
     message = null,
     component: MessageComponent = MessageComponent.TOAST,
-    type: MessageType = MessageType.INFO,
+    type: MessageType = MessageType.SUCCESS,
   ) {
     this.message = message
     this.component = component

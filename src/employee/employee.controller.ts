@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common'
 import { EmployeeService } from './employee.service'
 import { CreateEmployeeDto } from './dto/create-employee.dto'
 import { CreateBranchDto } from './dto/create-branch.dto'
 import { Auth } from 'src/auth/decorators'
 import { CreateDepartmentDto } from './dto/create-department.dto'
+import { UpdateEmployeeDto } from './dto/update-employee.dto'
 
 @Auth()
 @Controller('employee')
@@ -58,13 +59,18 @@ export class EmployeeController {
     return this.employeeService.findAll()
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.employeeService.findOne(+id)
+  @Get(':idEmployee')
+  findOne(@Param('idEmployee') idEmployee: string) {
+    return this.employeeService.findOne(idEmployee)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.employeeService.remove(+id)
+  @Delete(':idEmployee')
+  remove(@Param('idEmployee') idEmployee: string) {
+    return this.employeeService.remove(idEmployee)
+  }
+
+  @Put()
+  update(@Body() updateEmployeeDto: UpdateEmployeeDto) {
+    return this.employeeService.updateEmployee(updateEmployeeDto)
   }
 }

@@ -12,6 +12,7 @@ import {
   ResponseMessage,
 } from 'src/utils/CustomResponse'
 import { CreateDepartmentDto } from './dto/create-department.dto'
+import { UpdateEmployeeDto } from './dto/update-employee.dto'
 
 @Injectable()
 export class EmployeeService {
@@ -119,11 +120,48 @@ export class EmployeeService {
     return new CustomResponse(employees)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`
+  async findOne(idEmployee: string) {
+    const employee = await this.employeeRepository.findOne({
+      where: { idEmployee },
+      relations: ['department', 'department.branch'],
+    })
+
+    return new CustomResponse(employee)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employee`
+  async remove(idEmployee: string) {
+    const employee = await this.employeeRepository.findOneByOrFail({
+      idEmployee,
+    })
+
+    await this.employeeRepository.remove(employee)
+
+    return new CustomResponse(
+      employee,
+      new ResponseMessage('Empleado eliminado correctamente'),
+    )
+  }
+
+  async updateEmployee(updateEmployeeDto: UpdateEmployeeDto) {
+    const employee = await this.employeeRepository.findOneByOrFail({
+      idEmployee: updateEmployeeDto.idEmployee,
+    })
+
+    if (updateEmployeeDto.idDepartment) {
+      const department = await this.departmentRepository.findOneByOrFail({
+        idDepartment: updateEmployeeDto.idDepartment,
+      })
+
+      updateEmployeeDto.department = department
+
+      delete updateEmployeeDto.idDepartment
+    }
+
+    await this.employeeRepository.update(employee, updateEmployeeDto)
+
+    return new CustomResponse(
+      { message: 'Employee updated succesfully' },
+      new ResponseMessage('Empleado editado correctamente'),
+    )
   }
 }

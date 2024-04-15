@@ -35,7 +35,8 @@ export class Borrowing {
 
   @ApiProperty()
   @ManyToOne(() => Employee, (employee) => employee.borrowings, {
-    onDelete: 'CASCADE',
+    nullable: true,
+    onDelete: 'SET NULL',
   })
   employee: Employee
 
