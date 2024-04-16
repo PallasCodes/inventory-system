@@ -7,12 +7,7 @@ import { Category, Item, SingleItemStatus } from './entities'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { SingleItem } from './entities/single-item.entity'
 import { handleDBError } from '../utils/handleDBError'
-import {
-  CustomResponse,
-  MessageComponent,
-  MessageType,
-  ResponseMessage,
-} from '../utils/CustomResponse'
+import { CustomResponse, ResponseMessage } from '../utils/CustomResponse'
 import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 
@@ -147,7 +142,9 @@ export class ItemService {
     const item = await this.itemRepository.findOne({
       where: { idItem },
       relations: ['singleItems', 'singleItems.singleItemStatus'],
+      order: { singleItems: { sku: 'ASC' } },
     })
+
     if (!item)
       throw new BadRequestException(
         `Item not found with the given ID: ${idItem}`,
@@ -163,11 +160,7 @@ export class ItemService {
 
       return new CustomResponse(
         category,
-        new ResponseMessage(
-          'Categoría registrada correctamente',
-          MessageComponent.TOAST,
-          MessageType.SUCCESS,
-        ),
+        new ResponseMessage('Categoría registrada correctamente'),
       )
     } catch (error) {
       handleDBError(error)
@@ -224,20 +217,15 @@ export class ItemService {
   }
 
   async deleteCategory(idCategory: string) {
-    await this.categoryRepository
-      .createQueryBuilder()
-      .delete()
-      .from(Category)
-      .where('idCategory = :idCategory', { idCategory })
-      .execute()
+    const category = await this.categoryRepository.findOneByOrFail({
+      idCategory,
+    })
+
+    await this.categoryRepository.softRemove(category)
 
     return new CustomResponse(
-      { message: 'Category deleted succesfully' },
-      new ResponseMessage(
-        'Categoría eliminada',
-        MessageComponent.TOAST,
-        MessageType.SUCCESS,
-      ),
+      category,
+      new ResponseMessage('Categoría eliminada'),
     )
   }
 
@@ -271,15 +259,11 @@ export class ItemService {
       )
     }
 
-    await this.singleItemRepository.remove(singleItem)
+    await this.singleItemRepository.softRemove(singleItem)
 
     return new CustomResponse(
       singleItem,
-      new ResponseMessage(
-        'Item eliminado correctamente',
-        MessageComponent.TOAST,
-        MessageType.SUCCESS,
-      ),
+      new ResponseMessage('Item eliminado correctamente'),
     )
   }
 
@@ -295,29 +279,18 @@ export class ItemService {
 
     return new CustomResponse(
       updatedCategory,
-      new ResponseMessage(
-        'Categoría actualizada correctamente',
-        MessageComponent.TOAST,
-        MessageType.SUCCESS,
-      ),
+      new ResponseMessage('Categoría actualizada correctamente'),
     )
   }
 
   async deleteItem(idItem: string) {
-    await this.itemRepository
-      .createQueryBuilder()
-      .delete()
-      .from(Item)
-      .where('idItem = :idItem', { idItem })
-      .execute()
+    const item = await this.itemRepository.findOneByOrFail({ idItem })
+
+    await this.itemRepository.softRemove(item)
 
     return new CustomResponse(
-      { message: 'Item deleted' },
-      new ResponseMessage(
-        'Modelo eliminado correctamente',
-        MessageComponent.TOAST,
-        MessageType.SUCCESS,
-      ),
+      item,
+      new ResponseMessage('Modelo eliminado correctamente'),
     )
   }
 }

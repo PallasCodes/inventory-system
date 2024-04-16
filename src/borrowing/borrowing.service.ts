@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { IsNull, Not, Repository } from 'typeorm'
 
 import { CreateBorrowingDto } from './dto/create-borrowing.dto'
 import { SingleItem, SingleItemStatus } from 'src/item/entities'
@@ -63,13 +63,24 @@ export class BorrowingService {
   }
 
   async registerBorrowingReturn(borrowingReturnDto: BorrowingReturnDto) {
-    const borrowing = await this.borrowingRepository.findOneBy({
+    const borrowing = await this.borrowingRepository.findOneByOrFail({
       idBorrowing: borrowingReturnDto.idBorrowing,
     })
 
-    if (!borrowing) {
-      throw new BadRequestException(
-        `No borrowing found with the given id: ${borrowingReturnDto.idBorrowing}`,
+    const borrowingDate = new Date(borrowing.borrowingDate).getTime()
+    const borrowingReturn = new Date(
+      borrowingReturnDto.borrowingReturn,
+    ).getTime()
+
+    if (borrowingReturn < borrowingDate) {
+      return new CustomResponse(
+        borrowing,
+        new ResponseMessage(
+          'La fecha de retorno debe ser mayor o igual a la fecha del prestamo',
+          MessageComponent.TOAST,
+          MessageType.ERROR,
+        ),
+        true,
       )
     }
 
@@ -92,6 +103,7 @@ export class BorrowingService {
         'singleItem.item',
         'singleItem.item.categories',
       ],
+      withDeleted: true,
     })
 
     return new CustomResponse(borrowings)
@@ -108,17 +120,15 @@ export class BorrowingService {
   }
 
   async getBorrowingsHistory(sku: string) {
-    const borrowings = await this.borrowingRepository.find({
-      relations: [
-        'employee',
-        'singleItem',
-        'singleItem.item',
-        'employee.department',
-        'employee.department.branch',
-      ],
-      where: { singleItem: { sku } },
-      order: { borrowingDate: 'ASC' },
-    })
+    const borrowings = await this.borrowingRepository
+      .createQueryBuilder('borrowings')
+      .withDeleted()
+      .leftJoinAndSelect('borrowings.employee', 'employee')
+      .leftJoinAndSelect('borrowings.singleItem', 'singleItem')
+      .leftJoinAndSelect('employee.department', 'department')
+      .leftJoinAndSelect('department.branch', 'branch')
+      .where('singleItem.sku = :sku', { sku })
+      .orderBy('borrowing.borrowingDate', 'ASC')
 
     return new CustomResponse(borrowings)
   }
@@ -135,11 +145,7 @@ export class BorrowingService {
 
     return new CustomResponse(
       borrowing,
-      new ResponseMessage(
-        'Retorno cancelado',
-        MessageComponent.TOAST,
-        MessageType.SUCCESS,
-      ),
+      new ResponseMessage('Retorno cancelado'),
     )
   }
 
@@ -148,15 +154,11 @@ export class BorrowingService {
       idBorrowing,
     })
 
-    await this.borrowingRepository.remove(borrowing)
+    await this.borrowingRepository.softRemove(borrowing)
 
     return new CustomResponse(
       borrowing,
-      new ResponseMessage(
-        'Préstamo eliminado correctamente',
-        MessageComponent.TOAST,
-        MessageType.SUCCESS,
-      ),
+      new ResponseMessage('Préstamo eliminado correctamente'),
     )
   }
 }

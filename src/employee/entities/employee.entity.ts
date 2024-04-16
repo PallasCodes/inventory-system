@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -32,4 +33,7 @@ export class Employee {
     nullable: true,
   })
   borrowings: Borrowing
+
+  @DeleteDateColumn()
+  deletedAt: Date
 }

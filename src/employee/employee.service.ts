@@ -134,7 +134,7 @@ export class EmployeeService {
       idEmployee,
     })
 
-    await this.employeeRepository.remove(employee)
+    await this.employeeRepository.softRemove(employee)
 
     return new CustomResponse(
       employee,

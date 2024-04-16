@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 
 import { Employee } from '../../employee/entities/employee.entity'
 import { SingleItem } from 'src/item/entities'
@@ -45,4 +51,7 @@ export class Borrowing {
     onDelete: 'CASCADE',
   })
   singleItem: SingleItem
+
+  @DeleteDateColumn()
+  deletedAt: Date
 }

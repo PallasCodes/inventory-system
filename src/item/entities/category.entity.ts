@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToMany,
   PrimaryGeneratedColumn,
@@ -50,4 +51,7 @@ export class Category {
     onDelete: 'CASCADE',
   })
   items: Item[]
+
+  @DeleteDateColumn()
+  deletedAt: Date
 }

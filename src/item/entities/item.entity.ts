@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -81,5 +82,6 @@ export class Item {
   })
   singleItems: SingleItem[]
 
-  // TODO: add calculated columns for borrowed and available amounts
+  @DeleteDateColumn()
+  deletedAt: Date
 }
