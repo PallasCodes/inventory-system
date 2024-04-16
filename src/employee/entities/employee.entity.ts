@@ -36,4 +36,7 @@ export class Employee {
 
   @DeleteDateColumn()
   deletedAt: Date
+
+  @Column('numeric', { default: 0 })
+  numBorrowings: number
 }

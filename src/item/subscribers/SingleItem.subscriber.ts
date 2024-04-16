@@ -3,7 +3,7 @@ import {
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
-  RemoveEvent,
+  SoftRemoveEvent,
   UpdateEvent,
 } from 'typeorm'
 
@@ -23,7 +23,7 @@ export class SingleItemSubscriber
 
   async updateItemCounts(
     event:
-      | RemoveEvent<SingleItem>
+      | SoftRemoveEvent<SingleItem>
       | InsertEvent<SingleItem>
       | UpdateEvent<SingleItem>,
   ) {
@@ -102,7 +102,7 @@ export class SingleItemSubscriber
     itemRepository.save(item)
   }
 
-  async beforeRemove(event: RemoveEvent<SingleItem>) {
+  async beforeSoftRemove(event: SoftRemoveEvent<SingleItem>) {
     await this.updateItemCounts(event)
 
     const itemRepository = event.manager.getRepository(Item)

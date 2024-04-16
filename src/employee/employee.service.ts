@@ -114,6 +114,7 @@ export class EmployeeService {
         'employee.idEmployee as id_employee',
         'branch.idBranch as id_branch',
         'department.idDepartment as id_department',
+        'employee.numBorrowings as num_borrowings',
       ])
       .getRawMany()
 

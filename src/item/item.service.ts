@@ -234,6 +234,7 @@ export class ItemService {
 
     let items = await this.itemRepository.find({
       where: { skuPrefix: auxSkuPrefix },
+      withDeleted: true,
     })
 
     while (items.length > 0) {
