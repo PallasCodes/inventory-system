@@ -130,9 +130,9 @@ export class BorrowingService {
       .where('singleItem.sku = :sku', { sku })
       .orderBy('borrowing.borrowingDate', 'ASC')
 
-    return { sku }
+    // return { sku }
 
-    // return new CustomResponse(borrowings)
+    return new CustomResponse(borrowings)
   }
 
   async cancelBorrowing(idBorrowing: string) {

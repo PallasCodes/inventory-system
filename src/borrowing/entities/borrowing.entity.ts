@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
-import { Employee } from '../../employee/entities/employee.entity'
+import { Employee } from 'src/employee/entities/employee.entity'
 import { SingleItem } from 'src/item/entities'
 
 @Entity('borrowings')
