@@ -82,6 +82,6 @@ export class Item {
   })
   singleItems: SingleItem[]
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date
 }

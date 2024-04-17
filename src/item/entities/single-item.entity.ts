@@ -58,6 +58,6 @@ export class SingleItem {
   })
   borrowings: Borrowing[]
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date
 }

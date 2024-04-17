@@ -31,7 +31,8 @@ export class ItemService {
         SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 3 THEN 1 ELSE 0 END) AS borrowed,
         SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 4 THEN 1 ELSE 0 END) AS fixing
       FROM single_items si
-      WHERE si."itemIdItem" = '${idItem}'
+      LEFT JOIN items i ON si."itemIdItem" = i."idItem"
+      WHERE si."itemIdItem" = '${idItem} AND si.deleted_at IS NULL AND i.deleted_at IS NULL'
     `)
 
     const counts = queryResults[0]
@@ -46,7 +47,9 @@ export class ItemService {
 	      SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 2 THEN 1 ELSE 0 END) AS not_available,
         SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 3 THEN 1 ELSE 0 END) AS borrowed,
         SUM(CASE WHEN "singleItemStatusIdSingleItemStatus" = 4 THEN 1 ELSE 0 END) AS fixing
-      FROM single_items
+      FROM single_items si
+      LEFT JOIN items i ON si."itemIdItem" = i."idItem"
+      WHERE si.deleted_at IS NULL AND i.deleted_at IS NULL
     `)
 
     const counts = queryResults[0]
