@@ -120,17 +120,17 @@ export class BorrowingService {
   }
 
   async getBorrowingsHistory(sku: string) {
-    const borrowings = await this.borrowingRepository
-      .createQueryBuilder('borrowings')
-      .withDeleted()
-      .leftJoinAndSelect('borrowings.employee', 'employee')
-      .leftJoinAndSelect('borrowings.singleItem', 'singleItem')
-      .leftJoinAndSelect('employee.department', 'department')
-      .leftJoinAndSelect('department.branch', 'branch')
-      .where('singleItem.sku = :sku', { sku })
-      .orderBy('borrowing.borrowingDate', 'ASC')
-
-    // return { sku }
+    const borrowings = await this.borrowingRepository.find({
+      where: { singleItem: { sku } },
+      order: { borrowingDate: 'ASC' },
+      relations: [
+        'employee',
+        'singleItem',
+        'employee.department',
+        'employee.department.branch',
+      ],
+      withDeleted: true,
+    })
 
     return new CustomResponse(borrowings)
   }
