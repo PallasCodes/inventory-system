@@ -10,6 +10,7 @@ import { handleDBError } from '../utils/handleDBError'
 import { CustomResponse, ResponseMessage } from '../utils/CustomResponse'
 import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
+import { UpdateSingleItemDto } from './dto/update-single-item.dto'
 
 @Injectable()
 export class ItemService {
@@ -295,6 +296,30 @@ export class ItemService {
     return new CustomResponse(
       item,
       new ResponseMessage('Modelo eliminado correctamente'),
+    )
+  }
+
+  async updateSingleItem(updateSingleItemDto: UpdateSingleItemDto) {
+    const singleItem = await this.singleItemRepository.findOneByOrFail({
+      sku: updateSingleItemDto.sku,
+    })
+
+    if (updateSingleItemDto.idSingleItemStatus) {
+      const singleItemStatus =
+        await this.singleItemStatusRepository.findOneByOrFail({
+          idSingleItemStatus: updateSingleItemDto.idSingleItemStatus,
+        })
+
+      updateSingleItemDto.singleItemStatus = singleItemStatus
+
+      delete updateSingleItemDto.idSingleItemStatus
+    }
+
+    await this.singleItemRepository.update(singleItem.sku, updateSingleItemDto)
+
+    return new CustomResponse(
+      { ...singleItem, ...updateSingleItemDto },
+      new ResponseMessage('Item actualizado correctamente'),
     )
   }
 }

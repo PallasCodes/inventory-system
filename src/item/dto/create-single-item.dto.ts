@@ -12,7 +12,7 @@ export class CreateSingleItemDto {
   @ApiProperty({ nullable: true })
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @MinLength(0)
   @MaxLength(500)
   comments: string
 

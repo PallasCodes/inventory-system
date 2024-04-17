@@ -158,7 +158,7 @@ export class EmployeeService {
       delete updateEmployeeDto.idDepartment
     }
 
-    await this.employeeRepository.update(employee, updateEmployeeDto)
+    await this.employeeRepository.update(employee.idEmployee, updateEmployeeDto)
 
     return new CustomResponse(
       { message: 'Employee updated succesfully' },

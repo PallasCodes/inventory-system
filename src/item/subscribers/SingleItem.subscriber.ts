@@ -99,7 +99,7 @@ export class SingleItemSubscriber
     item.numUnavailableItems = results.not_available
     item.numTotalItems = totals
 
-    itemRepository.save(item)
+    await itemRepository.save(item)
   }
 
   async beforeSoftRemove(event: SoftRemoveEvent<SingleItem>) {

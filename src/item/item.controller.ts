@@ -5,6 +5,7 @@ import { Auth } from '../auth/decorators'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
+import { UpdateSingleItemDto } from './dto/update-single-item.dto'
 
 @Auth()
 @Controller('item')
@@ -69,6 +70,11 @@ export class ItemController {
   @Delete('singleItem/:sku')
   deleteSingleItem(@Param('sku') sku: string) {
     return this.itemService.deleteSingleItem(sku)
+  }
+
+  @Put('singleItem')
+  updateSingleItem(@Body() updateSingleItemDto: UpdateSingleItemDto) {
+    return this.itemService.updateSingleItem(updateSingleItemDto)
   }
 
   @Get('singleItem/:sku')
