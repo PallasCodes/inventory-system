@@ -11,6 +11,7 @@ import { CustomResponse, ResponseMessage } from '../utils/CustomResponse'
 import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 import { UpdateSingleItemDto } from './dto/update-single-item.dto'
+import { UpdateItemDto } from './dto/update-item.dto'
 
 @Injectable()
 export class ItemService {
@@ -320,6 +321,32 @@ export class ItemService {
     return new CustomResponse(
       { ...singleItem, ...updateSingleItemDto },
       new ResponseMessage('Item actualizado correctamente'),
+    )
+  }
+
+  async updateItemTable(updateItemDto: UpdateItemDto) {
+    const item = await this.itemRepository.findOneByOrFail({
+      idItem: updateItemDto.idItem,
+    })
+
+    const categories = await this.categoryRepository.find({
+      where: { idCategory: In(updateItemDto.categoriesIds) },
+    })
+
+    if (!categories) throw new BadRequestException('No categories found')
+
+    updateItemDto.categories = categories
+    delete updateItemDto.categoriesIds
+
+    const payload = { ...item, ...updateItemDto }
+
+    const toUpdate = await this.itemRepository.preload(payload)
+
+    await this.itemRepository.save(toUpdate)
+
+    return new CustomResponse(
+      toUpdate,
+      new ResponseMessage('Modelo actualizado correctamente'),
     )
   }
 }

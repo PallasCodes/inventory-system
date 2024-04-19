@@ -6,6 +6,7 @@ import { CreateCategoryDto } from './dto/create-category.dto'
 import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 import { UpdateSingleItemDto } from './dto/update-single-item.dto'
+import { UpdateItemDto } from './dto/update-item.dto'
 
 @Auth()
 @Controller('item')
@@ -15,6 +16,11 @@ export class ItemController {
   @Get('counts')
   getCounts() {
     return this.itemService.getItemsCount()
+  }
+
+  @Put()
+  updateItem(@Body() updateItemDto: UpdateItemDto) {
+    return this.itemService.updateItemTable(updateItemDto)
   }
 
   @Post()

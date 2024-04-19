@@ -114,6 +114,7 @@ export class BorrowingService {
       where: { returned: false },
       order: { borrowingDate: 'DESC' },
       relations: ['employee', 'singleItem', 'singleItem.item'],
+      withDeleted: true,
     })
 
     return new CustomResponse(borrowings)
