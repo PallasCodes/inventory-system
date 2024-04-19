@@ -7,6 +7,7 @@ import { GenerateSkuPrefixDto } from './dto/generate-sku-prefix.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 import { UpdateSingleItemDto } from './dto/update-single-item.dto'
 import { UpdateItemDto } from './dto/update-item.dto'
+import { ValidRoles } from 'src/auth/interfaces/valid-roles.interface'
 
 @Auth()
 @Controller('item')

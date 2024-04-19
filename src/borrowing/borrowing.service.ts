@@ -63,8 +63,12 @@ export class BorrowingService {
   }
 
   async registerBorrowingReturn(borrowingReturnDto: BorrowingReturnDto) {
-    const borrowing = await this.borrowingRepository.findOneByOrFail({
-      idBorrowing: borrowingReturnDto.idBorrowing,
+    const [borrowing] = await this.borrowingRepository.find({
+      where: {
+        idBorrowing: borrowingReturnDto.idBorrowing,
+      },
+      relations: ['singleItem'],
+      loadRelationIds: true,
     })
 
     const borrowingDate = new Date(borrowing.borrowingDate).getTime()
@@ -84,8 +88,21 @@ export class BorrowingService {
       )
     }
 
+    const singleItem = await this.singleItemRepository.findOneByOrFail({
+      sku: borrowing.singleItem as unknown as string,
+    })
+
+    // TODO: use catalog for singleItemStatus
+    const availableStatus = await this.singleItemStatusRepository.findOneBy({
+      idSingleItemStatus: 1,
+    })
+
+    singleItem.singleItemStatus = availableStatus
+    await this.singleItemRepository.save(singleItem)
+
     borrowing.returnDate = borrowingReturnDto.borrowingReturn
     borrowing.returned = true
+
     if (borrowingReturnDto.comments)
       borrowing.comments = borrowingReturnDto.comments
 
