@@ -32,6 +32,11 @@ export class BorrowingController {
     return this.borrowingService.listDueBorrowings()
   }
 
+  @Get('employee-borrowings-history/:idEmployee')
+  getEmployeeBorrowingsHistory(@Param('idEmployee') idEmployee: string) {
+    return this.borrowingService.getBorrowingsHistoryByEmployee(idEmployee)
+  }
+
   @Get('borrowings-history/:sku')
   getBorrowingsHistory(@Param('sku') sku: string) {
     return this.borrowingService.getBorrowingsHistory(sku)

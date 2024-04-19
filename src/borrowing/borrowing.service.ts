@@ -164,4 +164,20 @@ export class BorrowingService {
       new ResponseMessage('Préstamo eliminado correctamente'),
     )
   }
+
+  async getBorrowingsHistoryByEmployee(idEmployee: string) {
+    const borrowings = await this.borrowingRepository.find({
+      where: { employee: { idEmployee } },
+      order: { borrowingDate: 'ASC' },
+      relations: [
+        'employee',
+        'singleItem',
+        'employee.department',
+        'employee.department.branch',
+      ],
+      withDeleted: true,
+    })
+
+    return new CustomResponse(borrowings)
+  }
 }
