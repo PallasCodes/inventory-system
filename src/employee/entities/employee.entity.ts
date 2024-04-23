@@ -21,7 +21,7 @@ export class Employee {
   idEmployee: string
 
   @ApiProperty()
-  @Column('text')
+  @Column()
   fullName: string
 
   @ApiProperty()
@@ -37,6 +37,6 @@ export class Employee {
   @DeleteDateColumn()
   deletedAt: Date
 
-  @Column('numeric', { default: 0 })
+  @Column({ default: 0 })
   numBorrowings: number
 }

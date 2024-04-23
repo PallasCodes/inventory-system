@@ -20,23 +20,23 @@ export class Borrowing {
   idBorrowing: string
 
   @ApiProperty()
-  @Column('date')
+  @Column()
   borrowingDate: string
 
   @ApiProperty()
-  @Column('bool', { default: false })
+  @Column({ default: false })
   returned: boolean
 
   @ApiProperty()
-  @Column('date', { nullable: true })
+  @Column({ nullable: true })
   borrowingDeadline: string
 
   @ApiProperty()
-  @Column('date', { nullable: true })
+  @Column({ nullable: true })
   returnDate: string
 
   @ApiProperty()
-  @Column('text', { nullable: true })
+  @Column({ nullable: true })
   comments: string
 
   @ApiProperty()

@@ -14,31 +14,24 @@ import { Borrowing } from 'src/borrowing/entities/borrowing.entity'
 @Entity('single_items')
 export class SingleItem {
   @ApiProperty()
-  @Column('text', { unique: true, primary: true })
+  @Column({ unique: true, primary: true })
   sku: string
 
   @ApiProperty({ nullable: true })
-  @Column('text', { nullable: true })
+  @Column({ nullable: true })
   comments: string
 
   @ApiProperty({ nullable: true })
-  @Column('text', { nullable: true })
+  @Column({ nullable: true })
   imgUrl: string
 
   @ApiProperty()
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  public createdAt: Date
+  @CreateDateColumn()
+  createdAt: Date
 
   @ApiProperty()
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  public updatedAt: Date
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @ApiProperty()
   @ManyToOne(

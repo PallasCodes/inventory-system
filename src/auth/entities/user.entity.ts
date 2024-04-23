@@ -17,20 +17,24 @@ export class User {
   id: string
 
   @ApiProperty()
-  @Column('text')
+  @Column()
   username: string
 
   @ApiProperty()
-  @Column('text', { unique: true })
+  @Column()
   email: string
 
   @ApiProperty()
-  @Column('text', { select: false })
+  @Column({ select: false })
   password: string
 
+  // @ApiProperty()
+  // @Column(, { array: true, default: ['user'] })
+  // roles: string[]`
+
   @ApiProperty()
-  @Column('text', { array: true, default: ['user'] })
-  roles: string[]
+  @Column({ default: 'user' })
+  roles: string
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

@@ -9,7 +9,7 @@ export class SingleItemStatus {
   idSingleItemStatus: number
 
   @ApiProperty()
-  @Column('text')
+  @Column()
   name: string
 
   @ApiProperty()

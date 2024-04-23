@@ -20,31 +20,24 @@ export class Category {
   idCategory: string
 
   @ApiProperty()
-  @Column('text')
+  @Column()
   name: string
 
   @ApiProperty()
-  @Column('text', { nullable: true })
+  @Column({ nullable: true })
   description: string
 
   @ApiProperty()
-  @Column('text', { nullable: true })
+  @Column({ nullable: true })
   imgUrl: string
 
   @ApiProperty()
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  public createdAt: Date
+  @CreateDateColumn()
+  createdAt: Date
 
   @ApiProperty()
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  public updatedAt: Date
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @ApiProperty()
   @ManyToMany(() => Item, (item) => item.categories, {

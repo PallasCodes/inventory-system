@@ -45,51 +45,51 @@ export class SingleItemSubscriber
     const query = `SELECT
                     (
                     SELECT COUNT
-                      ( si."singleItemStatusIdSingleItemStatus" ) 
+                      ( si.singleItemStatusIdSingleItemStatus ) 
                     FROM
                       items i
-                      LEFT JOIN single_items si ON i."idItem" = si."itemIdItem"
-                      LEFT JOIN single_item_status sis ON sis."idSingleItemStatus" = si."singleItemStatusIdSingleItemStatus" 
+                      LEFT JOIN single_items si ON i.idItem = si.itemIdItem
+                      LEFT JOIN single_item_status sis ON sis.idSingleItemStatus = si.singleItemStatusIdSingleItemStatus
                     WHERE
-                      sis."idSingleItemStatus" = 1 
-                      AND i."idItem" = ii."idItem" 
+                      sis.idSingleItemStatus = 1 
+                      AND i.idItem = ii.idItem 
                     ) AS available,
                     (
                     SELECT COUNT
-                      ( si."singleItemStatusIdSingleItemStatus" ) 
+                      ( si.singleItemStatusIdSingleItemStatus ) 
                     FROM
                       items i
-                      LEFT JOIN single_items si ON i."idItem" = si."itemIdItem"
-                      LEFT JOIN single_item_status sis ON sis."idSingleItemStatus" = si."singleItemStatusIdSingleItemStatus" 
+                      LEFT JOIN single_items si ON i.idItem = si.itemIdItem
+                      LEFT JOIN single_item_status sis ON sis.idSingleItemStatus = si.singleItemStatusIdSingleItemStatus 
                     WHERE
-                      sis."idSingleItemStatus" = 2 
-                      AND i."idItem" = ii."idItem" 
+                      sis.idSingleItemStatus = 2 
+                      AND i.idItem = ii.idItem 
                     ) AS not_available,
                     (
                     SELECT COUNT
-                      ( si."singleItemStatusIdSingleItemStatus" ) 
+                      ( si.singleItemStatusIdSingleItemStatus ) 
                     FROM
                       items i
-                      LEFT JOIN single_items si ON i."idItem" = si."itemIdItem"
-                      LEFT JOIN single_item_status sis ON sis."idSingleItemStatus" = si."singleItemStatusIdSingleItemStatus" 
+                      LEFT JOIN single_items si ON i.idItem = si.itemIdItem
+                      LEFT JOIN single_item_status sis ON sis.idSingleItemStatus = si.singleItemStatusIdSingleItemStatus 
                     WHERE
-                      sis."idSingleItemStatus" = 3 
-                      AND i."idItem" = ii."idItem" 
+                      sis.idSingleItemStatus = 3 
+                      AND i.idItem = ii.idItem 
                     ) AS borrowed,
                     (
                     SELECT COUNT
-                      ( si."singleItemStatusIdSingleItemStatus" ) 
+                      ( si.singleItemStatusIdSingleItemStatus ) 
                     FROM
                       items i
-                      LEFT JOIN single_items si ON i."idItem" = si."itemIdItem"
-                      LEFT JOIN single_item_status sis ON sis."idSingleItemStatus" = si."singleItemStatusIdSingleItemStatus" 
+                      LEFT JOIN single_items si ON i.idItem = si.itemIdItem
+                      LEFT JOIN single_item_status sis ON sis.idSingleItemStatus = si.singleItemStatusIdSingleItemStatus 
                     WHERE
-                      sis."idSingleItemStatus" = 4 
-                      AND i."idItem" = ii."idItem" 
+                      sis.idSingleItemStatus = 4 
+                      AND i.idItem = ii.idItem 
                     ) AS fixing 
                   FROM
                     items ii
-                  WHERE ii."idItem" = '${item.idItem}'`
+                  WHERE ii.idItem = '${item.idItem}'`
 
     const [results] = await itemRepository.query(query)
 

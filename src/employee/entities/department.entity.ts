@@ -19,7 +19,7 @@ export class Department {
   idDepartment: string
 
   @ApiProperty()
-  @Column('text', { unique: true })
+  @Column({ unique: true })
   name: string
 
   @ApiProperty()
