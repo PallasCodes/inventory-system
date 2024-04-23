@@ -15,7 +15,7 @@ import { BorrowingModule } from './borrowing/borrowing.module'
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT_MYSQL,
       database: process.env.DB_NAME,
-      username: 'root',
+      username: process.env.DB_USERNAME_MYSQL,
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
       synchronize: true,
